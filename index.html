@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>API RP 754 製程安全事件篩選</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="page">
+      <header class="hero">
+        <div>
+          <p class="eyebrow">依據 API RP 754 文件流程</p>
+          <h1>製程安全事件快速篩選網站</h1>
+          <p class="subtitle">
+            讓操作現場或製程安全人員透過簡單條件，快速判定事故分級屬於工安事件或製程安全事件，並標示是否火災爆炸、
+            人員受傷、大量洩漏等。
+          </p>
+        </div>
+        <div class="hero-card">
+          <p class="card-title">使用方式</p>
+          <ol>
+            <li>依序填寫事件基本資訊與勾選條件。</li>
+            <li>系統即時計算事件類型與分級建議。</li>
+            <li>結果可用於通報、初步分流與後續調查。</li>
+          </ol>
+        </div>
+      </header>
+
+      <section class="panel">
+        <h2>事件基本資訊</h2>
+        <div class="grid two">
+          <label>
+            事件名稱
+            <input type="text" id="eventName" placeholder="例如：蒸餾塔火災" />
+          </label>
+          <label>
+            發生地點
+            <input type="text" id="eventLocation" placeholder="例如：煉油區 A-1" />
+          </label>
+          <label>
+            發生時間
+            <input type="datetime-local" id="eventTime" />
+          </label>
+          <label>
+            回報人員
+            <input type="text" id="reporter" placeholder="例如：製程安全工程師" />
+          </label>
+        </div>
+      </section>
+
+      <section class="panel">
+        <h2>事故判定條件</h2>
+        <div class="grid two">
+          <div class="question">
+            <h3>是否與製程設備/管線/儲槽相關？</h3>
+            <div class="options">
+              <label><input type="radio" name="processInvolved" value="yes" checked /> 是</label>
+              <label><input type="radio" name="processInvolved" value="no" /> 否</label>
+            </div>
+          </div>
+          <div class="question">
+            <h3>是否涉及火災或爆炸？</h3>
+            <div class="options">
+              <label><input type="radio" name="fireExplosion" value="yes" /> 是</label>
+              <label><input type="radio" name="fireExplosion" value="no" checked /> 否</label>
+            </div>
+          </div>
+          <div class="question">
+            <h3>是否有物質洩漏 (LOPC)？</h3>
+            <div class="options column">
+              <label><input type="radio" name="release" value="none" checked /> 無</label>
+              <label><input type="radio" name="release" value="minor" /> 小量/受控洩漏</label>
+              <label><input type="radio" name="release" value="major" /> 大量/失控洩漏</label>
+            </div>
+          </div>
+          <div class="question">
+            <h3>人員受傷程度</h3>
+            <div class="options column">
+              <label><input type="radio" name="injury" value="none" checked /> 無</label>
+              <label><input type="radio" name="injury" value="firstaid" /> 急救/輕微擦傷</label>
+              <label><input type="radio" name="injury" value="medical" /> 需醫療處置</label>
+              <label><input type="radio" name="injury" value="serious" /> 重傷/需住院</label>
+              <label><input type="radio" name="injury" value="fatal" /> 死亡</label>
+            </div>
+          </div>
+          <div class="question">
+            <h3>設備/財損影響</h3>
+            <div class="options column">
+              <label><input type="radio" name="damage" value="none" checked /> 無明顯損害</label>
+              <label><input type="radio" name="damage" value="minor" /> 可在班次內修復</label>
+              <label><input type="radio" name="damage" value="significant" /> 需停機/外部維修</label>
+              <label><input type="radio" name="damage" value="major" /> 裝置長期停工或重大財損</label>
+            </div>
+          </div>
+          <div class="question">
+            <h3>是否影響廠外/社區？</h3>
+            <div class="options">
+              <label><input type="radio" name="offsite" value="yes" /> 是</label>
+              <label><input type="radio" name="offsite" value="no" checked /> 否</label>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel">
+        <h2>篩選結果</h2>
+        <div class="result" id="resultBox">
+          <div class="result-header">
+            <h3 id="resultTitle">請完成選項以取得結果</h3>
+            <span class="badge" id="resultBadge">尚未分類</span>
+          </div>
+          <div class="result-body">
+            <p id="resultSummary">
+              選擇條件後，系統將依據 API RP 754 的流程提供事件類型與分級建議。
+            </p>
+            <div class="tag-list" id="resultTags"></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel">
+        <h2>建議後續行動</h2>
+        <ul class="checklist" id="actionList">
+          <li>立即確認現場安全，必要時啟動緊急應變。</li>
+          <li>通報製程安全與工安主管，建立初步事件記錄。</li>
+          <li>蒐集關鍵資料：時間、位置、設備狀態、操作條件。</li>
+          <li>依事件分級安排調查與後續改善追蹤。</li>
+        </ul>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <p>本篩選工具為初步判定用途，請依實際調查及法規要求確認最終分級。</p>
+    </footer>
+
+    <script src="app.js"></script>
+  </body>
+</html>
