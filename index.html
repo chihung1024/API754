@@ -1,178 +1,356 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="zh-Hant">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>API RP 754 製程安全事件篩選</title>
-    <link rel="stylesheet" href="styles.css" />
-  </head>
-  <body>
-    <main class="page">
-      <header class="hero">
-        <div>
-          <p class="eyebrow">依據 API RP 754 文件流程</p>
-          <h1>製程安全事件快速篩選網站</h1>
-          <p class="subtitle">
-            讓操作現場或製程安全人員透過簡單條件，快速判定事故分級屬於工安事件或製程安全事件，並標示是否火災爆炸、
-            人員受傷、大量洩漏等。
-          </p>
-          <div class="hero-actions">
-            <a class="button primary" href="#criteria">開始篩選</a>
-            <a class="button ghost" href="#result">查看結果</a>
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>API RP 754 製程安全事件快速篩選</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+TC:wght@400;500;700&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+
+  <div class="app-container">
+
+    <!-- Main Content Area: Triage Questions -->
+    <main class="main-content">
+      <header class="app-header">
+        <div class="brand">
+          <!-- Removed "API" text, just the icon box -->
+          <div class="logo-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
+            </svg>
           </div>
-        </div>
-        <div class="hero-card">
-          <p class="card-title">使用方式</p>
-          <ol>
-            <li>依序填寫事件基本資訊與勾選條件。</li>
-            <li>系統即時計算事件類型與分級建議。</li>
-            <li>結果可用於通報、初步分流與後續調查。</li>
-          </ol>
+          <div>
+            <h1>API RP 754 快速篩選 Check</h1>
+            <p class="subtitle">依據 ANSI/API Recommended Practice 754 (3rd Ed.)</p>
+          </div>
         </div>
       </header>
 
-      <section class="stat-grid" aria-label="快速資訊">
-        <article class="stat-card">
-          <p class="stat-title">可視化判定</p>
-          <p class="stat-value">Tier 1-3</p>
-          <p class="stat-desc">以色彩標示分級，第一時間辨識風險層級。</p>
-        </article>
-        <article class="stat-card">
-          <p class="stat-title">互動提醒</p>
-          <p class="stat-value">即時標籤</p>
-          <p class="stat-desc">動態顯示火災爆炸、洩漏、財損等關鍵訊號。</p>
-        </article>
-        <article class="stat-card">
-          <p class="stat-title">自適應排版</p>
-          <p class="stat-value">跨裝置</p>
-          <p class="stat-desc">桌機到行動裝置皆提供一致易讀體驗。</p>
-        </article>
-      </section>
+      <form id="triageForm" class="screening-form">
 
-      <form id="screeningForm" class="form">
-      <section class="panel">
-        <h2>事件基本資訊</h2>
-        <div class="grid two">
-          <label>
-            事件名稱
-            <input type="text" id="eventName" placeholder="例如：蒸餾塔火災" />
-          </label>
-          <label>
-            發生地點
-            <input type="text" id="eventLocation" placeholder="例如：煉油區 A-1" />
-          </label>
-          <label>
-            發生時間
-            <input type="datetime-local" id="eventTime" />
-          </label>
-          <label>
-            回報人員
-            <input type="text" id="reporter" placeholder="例如：製程安全工程師" />
-          </label>
-        </div>
-      </section>
+        <!-- Q1: Applicability -->
+        <section class="form-section glass-panel">
+          <h3 class="section-title">
+            <span class="step-num">1</span>
+            <span>適用性判定 (Applicability)</span>
+          </h3>
 
-      <section class="panel" id="criteria">
-        <h2>事故判定條件</h2>
-        <div class="grid two">
-          <div class="question">
-            <h3>是否與製程設備/管線/儲槽相關？</h3>
-            <div class="options">
-              <label class="option-pill"><input type="radio" name="processInvolved" value="yes" checked /> <span>是</span></label>
-              <label class="option-pill"><input type="radio" name="processInvolved" value="no" /> <span>否</span></label>
-            </div>
-          </div>
-          <div class="question">
-            <h3>是否涉及火災或爆炸？</h3>
-            <div class="options">
-              <label class="option-pill"><input type="radio" name="fireExplosion" value="yes" /> <span>是</span></label>
-              <label class="option-pill"><input type="radio" name="fireExplosion" value="no" checked /> <span>否</span></label>
-            </div>
-          </div>
-          <div class="question">
-            <h3>是否有物質洩漏 (LOPC)？</h3>
-            <div class="options column">
-              <label class="option-pill"><input type="radio" name="release" value="none" checked /> <span>無</span></label>
-              <label class="option-pill"><input type="radio" name="release" value="minor" /> <span>小量/受控洩漏</span></label>
-              <label class="option-pill"><input type="radio" name="release" value="major" /> <span>大量/失控洩漏</span></label>
-            </div>
-          </div>
-          <div class="question">
-            <h3>人員受傷程度</h3>
-            <div class="options column">
-              <label class="option-pill"><input type="radio" name="injury" value="none" checked /> <span>無</span></label>
-              <label class="option-pill"><input type="radio" name="injury" value="firstaid" /> <span>急救/輕微擦傷</span></label>
-              <label class="option-pill"><input type="radio" name="injury" value="medical" /> <span>需醫療處置</span></label>
-              <label class="option-pill"><input type="radio" name="injury" value="serious" /> <span>重傷/需住院</span></label>
-              <label class="option-pill"><input type="radio" name="injury" value="fatal" /> <span>死亡</span></label>
-            </div>
-          </div>
-          <div class="question">
-            <h3>設備/財損影響</h3>
-            <div class="options column">
-              <label class="option-pill"><input type="radio" name="damage" value="none" checked /> <span>無明顯損害</span></label>
-              <label class="option-pill"><input type="radio" name="damage" value="minor" /> <span>可在班次內修復</span></label>
-              <label class="option-pill"><input type="radio" name="damage" value="significant" /> <span>需停機/外部維修</span></label>
-              <label class="option-pill"><input type="radio" name="damage" value="major" /> <span>裝置長期停工或重大財損</span></label>
-            </div>
-          </div>
-          <div class="question">
-            <h3>是否影響廠外/社區？</h3>
-            <div class="options">
-              <label class="option-pill"><input type="radio" name="offsite" value="yes" /> <span>是</span></label>
-              <label class="option-pill"><input type="radio" name="offsite" value="no" checked /> <span>否</span></label>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section class="panel" id="result">
-        <h2>篩選結果</h2>
-        <div class="result" id="resultBox">
-          <div class="result-header">
-            <h3 id="resultTitle">請完成選項以取得結果</h3>
-            <span class="badge" id="resultBadge">尚未分類</span>
-          </div>
-          <div class="result-body">
-            <p id="resultSummary">
-              選擇條件後，系統將依據 API RP 754 的流程提供事件類型與分級建議。
-            </p>
-            <div class="tag-list" id="resultTags"></div>
-            <div class="result-tools">
-              <div class="progress">
-                <div class="progress-header">
-                  <span>基本資訊完成度</span>
-                  <strong id="progressValue">0%</strong>
+          <div class="criteria-list">
+            <div class="criteria-item split-layout">
+              <div class="question-col">
+                <div class="criteria-question">
+                  <h4>是否為製程相關之 LOPC 事件？ (Process LOPC)</h4>
+                  <p class="help-text">事件是否發生於<strong>製程區域</strong>，且涉及<strong>主要圍堵設備之物質釋放 (LOPC)</strong>？</p>
                 </div>
-                <div class="progress-track">
-                  <span class="progress-bar" id="progressBar"></span>
+                <div class="radio-group">
+                  <label class="radio-card">
+                    <input type="radio" name="processInvolved" value="yes" checked>
+                    <div class="card-content">
+                      <span class="check-icon"></span>
+                      <span class="label-text">是 (Yes)<br><small style="font-weight:normal; color:#64748b">製程區內 + 發生
+                          LOPC</small></span>
+                    </div>
+                  </label>
+                  <label class="radio-card">
+                    <input type="radio" name="processInvolved" value="no">
+                    <div class="card-content">
+                      <span class="check-icon"></span>
+                      <span class="label-text">否 (No)<br><small style="font-weight:normal; color:#64748b">非製程區 或 無
+                          LOPC</small></span>
+                    </div>
+                  </label>
                 </div>
               </div>
-              <div class="tool-buttons">
-                <button class="button ghost" type="button" id="copyResult">複製結果摘要</button>
-                <button class="button primary" type="button" id="resetForm">重設表單</button>
+              <div class="info-col">
+                <div class="info-card">
+                  <h5>💡 製程區域定義</h5>
+                  <ul class="info-list compact">
+                    <li><strong>包含:</strong> 生產區域、儲槽區、公用設施(水/電/氣/蒸氣)、廢水處理場、裝卸區。</li>
+                    <li><strong>排除:</strong> 辦公大樓、停車場、純粹營建工地(非既有製程區)、實驗室。</li>
+                  </ul>
+                  <hr class="divider">
+                  <h5>⚠️ LOPC 定義 (Loss of Primary Containment)</h5>
+                  <p class="desc-text">任何從主要圍堵設備(Primary Containment)發生的<strong>非計畫或失控</strong>的物料釋放。</p>
+                  <ul class="info-list compact">
+                    <li><strong>主要圍堵設備:</strong> 儲槽、容器、管線、槽車/鐵路油罐車。</li>
+                    <li><strong>定義包含:</strong> 物理性釋放(氣/液)及壓力洩放裝置(PRD)排放至大氣。</li>
+                    <li class="txt-red"><strong>注意:</strong> 非危害物質(如蒸汽、氮氣、壓縮空氣)之釋放，若導致 Tier 1/2 後果(如人員傷亡)亦屬 LOPC。</li>
+                  </ul>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      <section class="panel">
-        <h2>建議後續行動</h2>
-        <ul class="checklist" id="actionList">
-          <li>立即確認現場安全，必要時啟動緊急應變。</li>
-          <li>通報製程安全與工安主管，建立初步事件記錄。</li>
-          <li>蒐集關鍵資料：時間、位置、設備狀態、操作條件。</li>
-          <li>依事件分級安排調查與後續改善追蹤。</li>
-        </ul>
-      </section>
+        <!-- Q2: Consequences (Tier 1/2) -->
+        <section class="form-section glass-panel" id="consequenceSection">
+          <h3 class="section-title">
+            <span class="step-num">2</span>
+            <span>後果嚴重度評估 (Consequences)</span>
+          </h3>
+
+          <div class="criteria-list">
+
+            <!-- Fire/Explosion Cost -->
+            <div class="criteria-item split-layout">
+              <div class="question-col">
+                <div class="criteria-question">
+                  <h4>火災或爆炸之直接損失 (Direct Cost)</h4>
+                  <p class="help-text">包含火災或爆炸導致的直接財務損失。</p>
+                </div>
+                <div class="radio-group vertical">
+                  <label class="radio-card">
+                    <input type="radio" name="fireCost" value="none" checked>
+                    <div class="card-content">
+                      <span class="check-icon"></span>
+                      <span class="label-text">🟢無 / 低於 US$2,500</span>
+                    </div>
+                  </label>
+                  <label class="radio-card">
+                    <input type="radio" name="fireCost" value="tier2">
+                    <div class="card-content">
+                      <span class="check-icon"></span>
+                      <span class="label-text">🟠 Tier 2 (US$2.5k - $100k)</span>
+                    </div>
+                  </label>
+                  <label class="radio-card danger">
+                    <input type="radio" name="fireCost" value="tier1">
+                    <div class="card-content">
+                      <span class="check-icon"></span>
+                      <span class="label-text">🔴 Tier 1 (大於 US$100,000)</span>
+                    </div>
+                  </label>
+                </div>
+              </div>
+              <div class="info-col">
+                <div class="info-card">
+                  <h5>💰 直接損失範圍</h5>
+                  <ul class="info-list">
+                    <li class="txt-green"><strong>包含 (Included):</strong> 設備維修/更換(回原狀)、現場清理、廢棄物處置、緊急應變費用、鄰廠賠償。</li>
+                    <li class="txt-red"><strong>不含 (Excluded):</strong> <span
+                        style="text-decoration: underline;">營業中斷損失(Business Interruption)</span>、罰款、訴訟費、設備升級費、人身傷亡賠償。
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+            <!-- Personnel Impact -->
+            <div class="criteria-item split-layout">
+              <div class="question-col">
+                <div class="criteria-question">
+                  <h4>人員傷亡情形 (最嚴重者)</h4>
+                  <p class="help-text">針對員工、承攬商或第三方人員的傷害。</p>
+                </div>
+                <div class="radio-group vertical">
+                  <label class="radio-card">
+                    <input type="radio" name="injury" value="none" checked>
+                    <div class="card-content">
+                      <span class="check-icon"></span>
+                      <span class="label-text">🟢 無 / 急救 (First Aid)</span>
+                    </div>
+                  </label>
+                  <label class="radio-card">
+                    <input type="radio" name="injury" value="recordable">
+                    <div class="card-content">
+                      <span class="check-icon"></span>
+                      <span class="label-text">🟠 可記錄職災 (Recordable)</span>
+                    </div>
+                  </label>
+                  <label class="radio-card danger">
+                    <input type="radio" name="injury" value="lti_fatality">
+                    <div class="card-content">
+                      <span class="check-icon"></span>
+                      <span class="label-text">🔴 損失工時 (LTI) / 死亡</span>
+                    </div>
+                  </label>
+                  <label class="radio-card danger">
+                    <input type="radio" name="injury" value="admission">
+                    <div class="card-content">
+                      <span class="check-icon"></span>
+                      <span class="label-text">🔴 第三方住院 (Admission)</span>
+                    </div>
+                  </label>
+                </div>
+              </div>
+              <div class="info-col">
+                <div class="info-card">
+                  <h5>🚑 傷亡定義</h5>
+                  <table class="info-table small">
+                    <tr>
+                      <td width="30%"><strong>急救</strong><br>(First Aid)</td>
+                      <td>僅需包紮、消毒、非處方藥。含：輕微擦傷、1度燒燙傷、異物沖洗。</td>
+                    </tr>
+                    <tr>
+                      <td><strong>可記錄</strong><br>(Recordable)</td>
+                      <td>需<strong>專業醫療處置</strong>(縫合、處方藥、骨折)、限制工作或昏迷。</td>
+                    </tr>
+                    <tr>
+                      <td><strong>損失工時</strong><br>(LTI)</td>
+                      <td>受傷後導致<strong>隔日無法上班</strong>。無法執行原工作且需休養。</td>
+                    </tr>
+                  </table>
+                </div>
+              </div>
+            </div>
+
+            <!-- Release Quantity -->
+            <div class="criteria-item split-layout">
+              <div class="question-col">
+                <div class="criteria-question">
+                  <h4>物質洩漏量 LOPC Check</h4>
+                  <p class="help-text">於1小時內釋放超過門檻量 (Threshold Quantity, TQ)。</p>
+                </div>
+                <div class="radio-group vertical">
+                  <label class="radio-card">
+                    <input type="radio" name="release" value="none" checked>
+                    <div class="card-content">
+                      <span class="check-icon"></span>
+                      <span class="label-text">🟢 未洩漏 / 低於 Tier 2 TQ</span>
+                    </div>
+                  </label>
+                  <label class="radio-card">
+                    <input type="radio" name="release" value="tier2">
+                    <div class="card-content">
+                      <span class="check-icon"></span>
+                      <span class="label-text">🟠 超過 Tier 2 TQ (中量)</span>
+                    </div>
+                  </label>
+                  <label class="radio-card danger">
+                    <input type="radio" name="release" value="tier1">
+                    <div class="card-content">
+                      <span class="check-icon"></span>
+                      <span class="label-text">🔴 超過 Tier 1 TQ (大量)</span>
+                    </div>
+                  </label>
+                </div>
+              </div>
+              <div class="info-col">
+                <div class="info-card">
+                  <h5>⚠️ 什麼是 LOPC?</h5>
+                  <p class="desc-text"><strong>Loss of Primary Containment:</strong> 原物料從主要圍阻設施(管線、儲槽、卡車)之非計畫性釋放。</p>
+                  <hr class="divider">
+                  <h5>🧪 煉油廠物質 TQ 參考表 (1小時內)</h5>
+                  <table class="info-table small dense">
+                    <thead>
+                      <tr>
+                        <th>物質類別 / 常見例</th>
+                        <th>Tier 1</th>
+                        <th>Tier 2</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td><strong style="color:#d946ef">易燃氣體</strong><br>氫氣(H<sub>2</sub>)、燃料氣(Fuel Gas)、乙烯、丙烷(LPG)
+                        </td>
+                        <td>500 kg</td>
+                        <td>50 kg</td>
+                      </tr>
+                      <tr>
+                        <td><strong style="color:#ef4444">易燃液體 (FP < 23°C)</strong><br>原油(Crude)、輕油(Naphtha)、汽油、戊烷</td>
+                        <td>1,000 kg</td>
+                        <td>100 kg</td>
+                      </tr>
+                      <tr>
+                        <td><strong style="color:#f59e0b">可燃液體 (FP > 23°C)</strong><br>柴油、煤油、二甲苯、苯乙烯</td>
+                        <td>2,000 kg</td>
+                        <td>200 kg</td>
+                      </tr>
+                      <tr>
+                        <td><strong
+                            style="color:#8b5cf6">劇毒氣體/液體</strong><br>HF酸、氟氣、氯氣(Cl<sub>2</sub>)、H<sub>2</sub>S(硫化氫)</td>
+                        <td>5 kg<br>Cl<sub>2</sub>/H<sub>2</sub>S: 25kg</td>
+                        <td>0.5 kg<br>Cl<sub>2</sub>/H<sub>2</sub>S: 3kg</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+
+            <!-- Community Impact -->
+            <div class="criteria-item split-layout">
+              <div class="question-col">
+                <div class="criteria-question">
+                  <h4>社區與廠外影響</h4>
+                </div>
+                <div class="radio-group vertical">
+                  <label class="radio-card">
+                    <input type="radio" name="community" value="none" checked>
+                    <div class="card-content">
+                      <span class="check-icon"></span>
+                      <span class="label-text">🟢 無影響</span>
+                    </div>
+                  </label>
+                  <label class="radio-card danger">
+                    <input type="radio" name="community" value="tier1">
+                    <div class="card-content">
+                      <span class="check-icon"></span>
+                      <span class="label-text">🔴 正式疏散 (Evacuation) 或 避難 (Shelter-in-Place)</span>
+                    </div>
+                  </label>
+                </div>
+              </div>
+              <div class="info-col">
+                <div class="info-card">
+                  <h5>🏡 疏散與避難定義</h5>
+                  <ul class="info-list">
+                    <li><strong>正式疏散:</strong> 官方/公司啟動，明確要求居民離開。</li>
+                    <li><strong>避難 (Shelter-in-Place):</strong> 官方/公司建議留在室內關閉門窗。</li>
+                  </ul>
+                  <p class="note-text">※ 預警式封路(無影響居民)不計入 Tier 1。</p>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </section>
+
+        <footer class="app-footer">
+          <p>© 2026 API RP 754 Triage Tool. 僅供快速篩選參考，詳細判定請參閱完整規範。</p>
+        </footer>
       </form>
     </main>
 
-    <footer class="footer">
-      <p>本篩選工具為初步判定用途，請依實際調查及法規要求確認最終分級。</p>
-    </footer>
+    <!-- Sidebar / Result Panel -->
+    <aside class="result-sidebar">
+      <div class="result-card glass-panel">
+        <div class="result-header">
+          <span class="label">判定結果 (Result)</span>
+          <span class="badge" id="resultBadge">尚未分類</span>
+        </div>
 
-    <script src="app.js"></script>
-  </body>
+        <h2 id="resultTitle" class="result-title">請輸入條件</h2>
+
+        <div class="result-summary">
+          <p id="resultSummary">系統將依據 API RP 754 邏輯判定 Tier 1 / Tier 2 或其他事件。</p>
+        </div>
+
+        <div class="tags-container" id="resultTags"></div>
+
+        <div class="action-buttons">
+          <button type="button" class="btn btn-primary" id="copyResult">
+            <span class="icon">📋</span> 複製結果
+          </button>
+          <button type="button" class="btn btn-ghost" id="resetForm">
+            <span class="icon">↺</span> 重設
+          </button>
+        </div>
+      </div>
+    </aside>
+
+  </div>
+
+  <script src="app.js"></script>
+</body>
+
 </html>
