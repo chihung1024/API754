@@ -11,6 +11,11 @@ const resultTitle = document.getElementById('resultTitle');
 const resultBadge = document.getElementById('resultBadge');
 const resultSummary = document.getElementById('resultSummary');
 const resultTags = document.getElementById('resultTags');
+const progressBar = document.getElementById('progressBar');
+const progressValue = document.getElementById('progressValue');
+const copyResultButton = document.getElementById('copyResult');
+const resetFormButton = document.getElementById('resetForm');
+const screeningForm = document.getElementById('screeningForm');
 
 const getValue = (name) =>
   document.querySelector(`input[name="${name}"]:checked`)?.value ?? '';
@@ -80,6 +85,36 @@ const summarize = (values, classificationKey) => {
   return lines.join(' ');
 };
 
+const updateProgress = () => {
+  const fields = [
+    document.getElementById('eventName'),
+    document.getElementById('eventLocation'),
+    document.getElementById('eventTime'),
+    document.getElementById('reporter'),
+  ];
+  const filled = fields.filter((field) => field && field.value.trim() !== '').length;
+  const percent = Math.round((filled / fields.length) * 100);
+  progressBar.style.width = `${percent}%`;
+  progressValue.textContent = `${percent}%`;
+};
+
+const buildCopyText = (values, classification) => {
+  const name = document.getElementById('eventName')?.value || '未填寫';
+  const location = document.getElementById('eventLocation')?.value || '未填寫';
+  const time = document.getElementById('eventTime')?.value || '未填寫';
+  const reporter = document.getElementById('reporter')?.value || '未填寫';
+  const tags = buildTags(values);
+  return [
+    `事件名稱：${name}`,
+    `地點：${location}`,
+    `時間：${time}`,
+    `回報人員：${reporter}`,
+    `判定結果：${classification.title} (${classification.badge})`,
+    `關鍵標籤：${tags.length ? tags.join('、') : '無重大徵象'}`,
+    `摘要：${resultSummary.textContent}`,
+  ].join('\n');
+};
+
 const determineClassification = (values) => {
   if (values.processInvolved === 'no') {
     return 'occupational';
@@ -124,6 +159,7 @@ const updateResult = () => {
   resultBadge.textContent = classification.badge;
   resultBadge.className = `badge ${classification.className}`;
   resultSummary.textContent = summarize(values, classificationKey);
+  updateProgress();
 
   resultTags.innerHTML = '';
   const tags = buildTags(values);
@@ -146,6 +182,49 @@ selectors.forEach((selector) => {
   document.querySelectorAll(selector).forEach((input) => {
     input.addEventListener('change', updateResult);
   });
+});
+
+['eventName', 'eventLocation', 'eventTime', 'reporter'].forEach((id) => {
+  const input = document.getElementById(id);
+  if (input) {
+    input.addEventListener('input', updateProgress);
+  }
+});
+
+copyResultButton?.addEventListener('click', async () => {
+  const values = {
+    processInvolved: getValue('processInvolved'),
+    fireExplosion: getValue('fireExplosion'),
+    release: getValue('release'),
+    injury: getValue('injury'),
+    damage: getValue('damage'),
+    offsite: getValue('offsite'),
+  };
+  const classificationKey = determineClassification(values);
+  const classification = classificationMap[classificationKey];
+  const text = buildCopyText(values, classification);
+
+  if (navigator.clipboard?.writeText) {
+    await navigator.clipboard.writeText(text);
+    copyResultButton.textContent = '已複製';
+  } else {
+    const textArea = document.createElement('textarea');
+    textArea.value = text;
+    document.body.append(textArea);
+    textArea.select();
+    document.execCommand('copy');
+    textArea.remove();
+    copyResultButton.textContent = '已複製';
+  }
+
+  setTimeout(() => {
+    copyResultButton.textContent = '複製結果摘要';
+  }, 2000);
+});
+
+resetFormButton?.addEventListener('click', () => {
+  screeningForm?.reset();
+  updateResult();
 });
 
 updateResult();
